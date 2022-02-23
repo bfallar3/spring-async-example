@@ -14,23 +14,26 @@ import java.util.concurrent.ExecutionException;
 @RequestMapping("/api/users")
 public class UserController {
 
-   private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
+  private static final Logger LOGGER = LoggerFactory.getLogger(UserController.class);
 
-   @Autowired
-   private UserServiceImpl userService;
+  @Autowired
+  private UserServiceImpl userService;
 
-   @GetMapping
-   public String getUsers() throws InterruptedException, ExecutionException {
-      LOGGER.info("getUsers api started at thread: {}", Thread.currentThread().getName());
+  @GetMapping
+  public NameModel getUsers() throws InterruptedException, ExecutionException {
+    LOGGER.info("getUsers api started at thread: {}", Thread.currentThread().getName());
 
-      CompletableFuture<String> userBenj = userService.getUsers("Benj");
-      CompletableFuture<String> userYciel = userService.getUsers("Yciel");
-      CompletableFuture<String> userXp = userService.getUsers("XP");
+    CompletableFuture<String> userBenj = userService.getUsers("Benj");
+    CompletableFuture<String> userYciel = userService.getUsers("Yciel");
+    CompletableFuture<String> userXp = userService.getUsers("XP");
 
-      CompletableFuture.allOf(userXp, userBenj, userYciel).join();
+    CompletableFuture.allOf(userXp, userBenj, userYciel).join();
 
-      return "Welcome " + userBenj.get() + " "
-              + userXp.get() + " "
-              + userYciel.get();
-   }
+    NameModel nameModel = new NameModel();
+    nameModel.setName1(userBenj.get());
+    nameModel.setName2(userYciel.get());
+    nameModel.setName3(userXp.get());
+
+    return nameModel;
+  }
 }

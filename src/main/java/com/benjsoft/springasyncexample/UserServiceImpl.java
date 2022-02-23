@@ -18,6 +18,8 @@ public class UserServiceImpl {
       // simulate long running execution
 
       Thread.sleep(3000);
-      return CompletableFuture.completedFuture("getUsers completed " + name + "!");
+
+      return CompletableFuture.supplyAsync(() -> "Hello " + name);
+      //return CompletableFuture.completedFuture("getUsers completed " + name + "!");
    }
 }
